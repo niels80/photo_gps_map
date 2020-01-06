@@ -304,19 +304,7 @@ sub create_preview {
 	my $fileOutMedium = $folderMedium."/".sprintf("%08d",$idFoto).".jpg";
 	my $fileOutSmall  = $folderSmall."/".sprintf("%08d",$idFoto).".jpg";
 	
-		my $flipflop = " "; # 1 Normal case
-	
-	# For jpeg not necessary
-	#if 		($idOrientation == 2) { $flipflop = " -flop "; }
-	#elsif 	($idOrientation == 3) { $flipflop = " -rotate 180 "; }
-	#elsif 	($idOrientation == 4) { $flipflop = " -flip "; }
-	#elsif 	($idOrientation == 5) { $flipflop = " -transverse "; }
-	#elsif 	($idOrientation == 6) { $flipflop = " -rotate 90 "; }
-	#elsif 	($idOrientation == 7) { $flipflop = " -rotate 90 -flop "; }
-	#elsif 	($idOrientation == 8) { $flipflop = " -rotate 270 "; }
-	
-	
-	my $cmd = 'magick convert "'.$file.'" -resize '.$newSizeMedium.' '.$flipflop.' -write "'.$fileOutMedium.'" -resize '.$newSizeSmall.'  "'.$fileOutSmall.'" '; 
+	my $cmd = 'magick convert "'.$file.'" -auto-orient -resize '.$newSizeMedium.' '.$flipflop.' -write "'.$fileOutMedium.'" -resize '.$newSizeSmall.'  "'.$fileOutSmall.'" '; 
 	system($cmd);
 	
 	if ( $DBGLEVEL > 1 ) {
