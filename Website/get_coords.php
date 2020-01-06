@@ -9,8 +9,13 @@ if(isset($_REQUEST['idCluster'])) {
 	$idCluster = preg_replace("/[^0-9 ]/", '', $_REQUEST['idCluster']);
 }
 
+$jahr = 0;
+if(isset($_REQUEST['jahr'])) {
+	$jahr = (int)preg_replace("/[^0-9 ]/", '', $_REQUEST['jahr']);
+}
 
-echo json_encode(get_coords($idCluster));  //, JSON_PRETTY_PRINT
+
+echo json_encode(get_coords($idCluster,$jahr));  //, JSON_PRETTY_PRINT
 
 
 exit;
@@ -30,14 +35,19 @@ function db_connect()
 }
 
 /* Function to retrieve the users */
-function get_coords($idCluster)
+function get_coords($idCluster,$jahr)
 {
 	$db = db_connect();
 	
 	$features = array();
 		
 	$query = 'SELECT ID_FOTO,FROM_UNIXTIME(TS_CREATE) AS TIME, GPS_LAT,GPS_LON FROM fotos.fotos WHERE GPS_LAT IS NOT NULL ORDER BY ID_FOTO ASC';
-	$result = mysqli_query($db, $query);
+	
+	if ($jahr >0) {
+		$query = "SELECT ID_FOTO,FROM_UNIXTIME(TS_CREATE) AS TIME, GPS_LAT,GPS_LON FROM fotos.fotos WHERE GPS_LAT IS NOT NULL AND FROM_UNIXTIME(TS_CREATE,'%Y')=".$jahr." ORDER BY ID_FOTO ASC";
+	}
+	
+	$result = mysqli_query($db, $query) or die($query."\n------\n".mysqli_error());
 	
 	while ($row = mysqli_fetch_assoc($result))
 	{

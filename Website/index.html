@@ -22,21 +22,30 @@
   </head>
   <body>
 	
-	<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-      <h4 class="display-4">Fotos Niels</h4>
-    </div>
-
-	
-	<div id="map" style="height: 500px">
-			<!-- Map -->
+	<div class="container">
+		<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+			<h1 class="display-4">Fotos Niels</h1>
+		</div>
+		<div class="btn-toolbar">
+			<button type="button" class="btn btn-secondary btn-sm mx-1" id="resetZoom" >Reset Zoom</button>
+			<button type="button" class="btn btn-secondary btn-sm mx-1 btnJahr" value="0" >Alle</button>
+			<button type="button" class="btn btn-secondary btn-sm mx-1 btnJahr" value="2015" >2015</button>
+			<button type="button" class="btn btn-secondary btn-sm mx-1 btnJahr" value="2016" >2016</button>
+			<button type="button" class="btn btn-secondary btn-sm mx-1 btnJahr" value="2017" >2017</button>
+			<button type="button" class="btn btn-secondary btn-sm mx-1 btnJahr" value="2018" >2018</button>
+			<button type="button" class="btn btn-secondary btn-sm mx-1 btnJahr" value="2019" >2019</button>
+			<button type="button" class="btn btn-secondary btn-sm mx-1 btnJahr" value="2020" >2020</button>
+		</div>
+		<div class="border-top my-3"></div>
+		<div id="map" style="height: 500px">
+				<!-- Map -->
+		</div>
+		<div class="border-top my-3"></div>
+		<div class="gallery" id="gallery">
+				<!-- Gallery -->
+		</div>	
+		<div class="border-top my-3"></div>
 	</div>
-	
-	<div class="gallery" id="gallery">
-			<!-- Gallery -->
-	</div>	
-
-
 	<script src="map.js"></script>
-
   </body>
 </html>

@@ -122,10 +122,10 @@ foreach my $file (@files) {
             $gps_lat = $cfg2->param('GPS_LAT');
         }
         if ( defined $cfg2->param('GPS_LON') ) {
-            $gps_lat = $cfg2->param('GPS_LON');
+            $gps_lon = $cfg2->param('GPS_LON');
         }
         if ( defined $cfg2->param('GPS_ALT') ) {
-            $gps_lat = $cfg2->param('GPS_ALT');
+            $gps_alt = $cfg2->param('GPS_ALT');
         }
 		if ( defined $cfg2->param('DATE') ) {
 			my ( $yyyy, $mm ) = $filedir =~ /(\d{4})-(\d{2}).+/;
@@ -304,7 +304,7 @@ sub create_preview {
 	my $fileOutMedium = $folderMedium."/".sprintf("%08d",$idFoto).".jpg";
 	my $fileOutSmall  = $folderSmall."/".sprintf("%08d",$idFoto).".jpg";
 	
-	my $cmd = 'magick convert "'.$file.'" -auto-orient -resize '.$newSizeMedium.' '.$flipflop.' -write "'.$fileOutMedium.'" -resize '.$newSizeSmall.'  "'.$fileOutSmall.'" '; 
+	my $cmd = 'magick convert "'.$file.'" -auto-orient -resize '.$newSizeMedium.'  -write "'.$fileOutMedium.'" -resize '.$newSizeSmall.'  "'.$fileOutSmall.'" '; 
 	system($cmd);
 	
 	if ( $DBGLEVEL > 1 ) {

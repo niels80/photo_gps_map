@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 04. Jan 2020 um 09:32
+-- Erstellungszeit: 06. Jan 2020 um 23:42
 -- Server-Version: 10.4.11-MariaDB
 -- PHP-Version: 7.4.1
 
@@ -54,18 +54,19 @@ CREATE TABLE `cluster` (
 
 CREATE TABLE `fotos` (
   `ID_FOTO` int(10) UNSIGNED NOT NULL,
-  `GPS_LAT` float NOT NULL,
-  `GPS_LON` float NOT NULL,
-  `GPS_HEIGHT` float NOT NULL,
+  `GPS_LAT` float DEFAULT NULL,
+  `GPS_LON` float DEFAULT NULL,
+  `GPS_ALT` float DEFAULT NULL,
   `TS_CREATE` int(10) UNSIGNED NOT NULL,
-  `WIDTH` int(10) UNSIGNED NOT NULL,
-  `HEIGHT` int(10) UNSIGNED NOT NULL,
-  `ROTATE` int(11) NOT NULL,
+  `ID_TIME_ACCURACY` tinyint(4) NOT NULL,
+  `WIDTH` int(10) UNSIGNED DEFAULT NULL,
+  `HEIGHT` int(10) UNSIGNED DEFAULT NULL,
+  `ID_ORIENTATION` tinyint(4) DEFAULT NULL,
   `FILE_BASE` varchar(100) NOT NULL,
   `FILE_DIR` varchar(255) NOT NULL,
   `FILE_NAME` varchar(100) NOT NULL,
-  `ID_CLUSTER` int(10) UNSIGNED NOT NULL,
-  `TS_UPDATE` int(10) UNSIGNED NOT NULL,
+  `ID_CLUSTER` int(10) UNSIGNED DEFAULT NULL,
+  `TS_IMPORT` int(10) UNSIGNED NOT NULL,
   `SHA256` char(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -109,6 +110,29 @@ INSERT INTO `orientation` (`ID_ORIENTATION`, `NAME`, `ROTATE`, `FLIP_HORIZONTAL`
 (7, 'Mirror horizontal and rotate 90 CW', 90, b'1', b'0'),
 (8, 'Rotate 270 CW', 270, b'0', b'0');
 
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `time_accuracy`
+--
+
+CREATE TABLE `time_accuracy` (
+  `ID_TIME_ACCURACY` int(11) NOT NULL,
+  `NAME` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Daten für Tabelle `time_accuracy`
+--
+
+INSERT INTO `time_accuracy` (`ID_TIME_ACCURACY`, `NAME`) VALUES
+(-1, 'Unknown'),
+(1, 'GPS Time'),
+(2, 'Creation Time from EXIF'),
+(3, 'Date in gallery.cfg'),
+(4, 'Time from folder name'),
+(5, 'Last change of file');
+
 --
 -- Indizes der exportierten Tabellen
 --
@@ -143,6 +167,22 @@ ALTER TABLE `foto_attribute`
 --
 ALTER TABLE `orientation`
   ADD PRIMARY KEY (`ID_ORIENTATION`);
+
+--
+-- Indizes für die Tabelle `time_accuracy`
+--
+ALTER TABLE `time_accuracy`
+  ADD PRIMARY KEY (`ID_TIME_ACCURACY`);
+
+--
+-- AUTO_INCREMENT für exportierte Tabellen
+--
+
+--
+-- AUTO_INCREMENT für Tabelle `fotos`
+--
+ALTER TABLE `fotos`
+  MODIFY `ID_FOTO` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

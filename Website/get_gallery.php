@@ -8,6 +8,7 @@ if(isset($_REQUEST['idFoto'])) {
 	$idFoto = (int)preg_replace("/[^0-9 ]/", '', $_REQUEST['idFoto']);
 }
 
+
 print_gallery($idFoto,3*60*60);
 
 exit;
@@ -39,7 +40,7 @@ function print_gallery($idFoto,$seconds)
 	$tsMax  = (int)$ts+$seconds/2;
 		
 	$query = 'SELECT ID_FOTO,FROM_UNIXTIME(TS_CREATE) AS TIME, FILE_NAME FROM fotos.fotos WHERE TS_CREATE>'.$tsMin.' AND TS_CREATE< '.$tsMax.' ORDER BY TS_CREATE ';
-	$result = mysqli_query($db, $query);
+	$result = mysqli_query($db, $query) or die(mysqli_error());
 	
 	$html_preview = '  <div class="row" id="galleryPreview" data-toggle="modal" data-target="#exampleModal">';
 	
@@ -71,7 +72,7 @@ function print_gallery($idFoto,$seconds)
 		
 		$html_preview  .= '
 				<div class="col-sm">
-					<img src="./get_foto.php?idSize=1&idFoto='.$row['ID_FOTO'].'"  alt="'.$row['FILE_NAME'].'" data-target="#carouselExample" data-slide-to="'.($i-1).'">
+					<img class="img-thumbnail" src="./get_foto.php?idSize=1&idFoto='.$row['ID_FOTO'].'"  alt="'.$row['FILE_NAME'].'" data-target="#carouselExample" data-slide-to="'.($i-1).'">
 				</div> 
 				';
 		$html_modal .= '

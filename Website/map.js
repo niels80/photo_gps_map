@@ -1,32 +1,54 @@
 'use strict';
 
+var map = L.map('map');
+var markers = L.markerClusterGroup();
 
-// Add AJAX request for data
-var fotos = $.ajax({
-  url:"./get_coords.php",
-  dataType: "json",
-  success: console.log("Coordinates successfully loaded."),
-  error: function (xhr) {
-	alert(xhr.statusText)
-  }
-})
+updateMap(0,1);
 
-$.when(fotos).done(function() {
+// Button for years
+Array.from(document.getElementsByClassName('btnJahr')).forEach((element) => {
+  element.addEventListener('click', (event) => {
+    updateMap(event.target.value);
+  });
+});
 
-	var map = L.map('map');
+document.getElementById('resetZoom').addEventListener('click', (event) => {
+    map.setView([0,0],2);
+ });
+
+
+function updateMap(year=0,resetZoom=0) {
 	
-	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	  attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-	}).addTo(map);
 	
-	var markers = L.markerClusterGroup();
+	
+	// Add AJAX request for data
+	var fotos = $.ajax({
+	  url:"./get_coords.php?jahr="+year,
+	  dataType: "json",
+	  success: console.log(year+" Coordinates successfully loaded."),
+	  error: function (xhr) {
+		alert(xhr.statusText)
+	  }
+	})
 
-	var geoJsonLayer = L.geoJSON(fotos.responseJSON, { onEachFeature: onEachMarker } );
-	markers.addLayer(geoJsonLayer);
-	map.addLayer(markers);
-    map.fitBounds(markers.getBounds());
-    
-})
+	$.when(fotos).done(function() {
+
+		
+		markers.clearLayers();
+		
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		  attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+		}).addTo(map);
+		
+		var geoJsonLayer = L.geoJSON(fotos.responseJSON, { onEachFeature: onEachMarker } );
+		markers.addLayer(geoJsonLayer);
+		map.addLayer(markers);
+		
+		if (resetZoom>0) {
+			map.setView([0,0],2);
+		}
+	})
+}
 
 
 function onEachMarker(feature, layer) {
@@ -38,12 +60,19 @@ function onEachMarker(feature, layer) {
 		}
 		
 		var popup_html = '<img src="./get_foto.php?idSize=1&idFoto='+feature.properties.id+'" /><p>'+feature.properties.id+'</p>';
-		layer.bindPopup(popup_html);
+		layer.bindPopup(popup_html, {
+			maxWidth: "auto"
+		});
 		layer.openPopup();
 		$("#gallery").load("./get_gallery.php?idFoto="+feature.properties.id);
 		
 	});
 		
 }
+
+
+
+
+
 
 
