@@ -1,4 +1,4 @@
-# photo_gps_map
+# Photo GPS Map
 Simple but fun scripts to create a GPS based map of your fotos with Leaflet and OpenStreetMap
 
 ![Example 01](Examples/img_01.png)
