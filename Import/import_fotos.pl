@@ -105,6 +105,7 @@ foreach my $file (@files) {
 	my $gps_lon = "NULL";
     my $gps_lat = "NULL";
     my $gps_alt = "NULL";
+	my $ts_GPS  = "NULL";
 	
 	# Read Folder Config file if exists
     my $file_local_conf = $filebase . $filedir . "gallery.cfg";
@@ -223,13 +224,14 @@ foreach my $file (@files) {
 
     # EXIF Image Time
     if ( defined $exif->{'GPSDateTime'} ) {
-        $tsCreate = $exif->{'GPSDateTime'};
+        $ts_GPS = $exif->{'GPSDateTime'};
 		$idAccuracy = 1; 
         if ( $DBGLEVEL > 1 ) {
-            print " - Found GPS Time: ". &get_time_formatted($tsCreate) . " \n";
+            print " - Found GPS Time: ". &get_time_formatted($ts_GPS) . " \n";
         }
     }
-    elsif ( defined $exif->{'DateTimeOriginal'} ) {
+    
+	if ( defined $exif->{'DateTimeOriginal'} ) {
         $tsCreate = $exif->{'DateTimeOriginal'};
 		$idAccuracy = 2;
         if ( $DBGLEVEL > 1 ) {
@@ -243,13 +245,14 @@ foreach my $file (@files) {
 	   }
 	}
 		
-	$sql =   "INSERT INTO fotos(GPS_LAT,GPS_LON,GPS_ALT,TS_CREATE,ID_TIME_ACCURACY,WIDTH,HEIGHT,ID_ORIENTATION,FILE_BASE,FILE_DIR,FILE_NAME,TS_IMPORT,SHA256) VALUES \n";
-	$sql .=  "(".$gps_lat.",".$gps_lon.",".$gps_alt.",".$tsCreate.",".$idAccuracy.",".$imgWidth.",".$imgHeigth.",".$id_orientation.",'".$filebase."','".$filedir."','".$filename."',".$ts.",'".$sha256."') \n"; 
+	$sql =   "INSERT INTO fotos(GPS_LAT,GPS_LON,GPS_ALT,TS_CREATE,TS_GPS,ID_TIME_ACCURACY,WIDTH,HEIGHT,ID_ORIENTATION,FILE_BASE,FILE_DIR,FILE_NAME,TS_IMPORT,SHA256) VALUES \n";
+	$sql .=  "(".$gps_lat.",".$gps_lon.",".$gps_alt.",".$tsCreate.",".$ts_GPS.",".$idAccuracy.",".$imgWidth.",".$imgHeigth.",".$id_orientation.",'".$filebase."','".$filedir."','".$filename."',".$ts.",'".$sha256."') \n"; 
 	$sql .=  "ON DUPLICATE KEY UPDATE \n";
 	$sql .=  " GPS_LAT = ".$gps_lat.", \n";
 	$sql .=  " GPS_LON = ".$gps_lon.", \n";
 	$sql .=  " GPS_ALT = ".$gps_alt.", \n";
 	$sql .=  " TS_CREATE = ".$tsCreate.", \n";
+	$sql .=  " TS_GPS = ".$ts_GPS.", \n";
 	$sql .=  " ID_TIME_ACCURACY = ".$idAccuracy."\n";
 	$sth = $dbh->prepare($sql) or die Dumper($exif)."\n\nSQL prepare statement failed: " . $dbh->errstr(). " SQL: \n\n----------------------\n".$sql."\n----------------------\n";
     $sth->execute() or die Dumper($exif)."\n\nSQL execution failed: " . $dbh->errstr(). " SQL: \n\n----------------------\n".$sql."\n----------------------\n";
