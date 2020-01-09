@@ -59,11 +59,13 @@ function onEachMarker(feature, layer) {
 			layer.unbindPopup();
 		}
 		
-		var popup_html = '<img src="./get_foto.php?idSize=1&idFoto='+feature.properties.id+'" /><p>'+feature.properties.id+'</p>';
+		var popup_html = '<img src="./get_foto.php?idSize=1&idFoto='+feature.properties.id+'" /><p>'+feature.properties.id+'</p><p><div id="link_photo"></div></p>';
 		layer.bindPopup(popup_html, {
 			maxWidth: "auto"
 		});
+		
 		layer.openPopup();
+		$("#link_photo").load("./get_link.php?idFoto="+feature.properties.id);
 		$("#gallery").load("./get_gallery.php?idFoto="+feature.properties.id);
 		
 	});
